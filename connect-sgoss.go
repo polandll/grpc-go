@@ -15,50 +15,30 @@ var stargateClient *client.StargateClient
 
 func main() {
 
-	// Stargate OSS configuration for locally hosted docker image
-	stargateUri := "localhost:8090"
+	grpcEndpoint := "localhost:8090"
 	authEndpoint := "localhost:8081"
-	username := "cassandra"
-	password := "cassandra"
 
-	// Astra DB configuration
-	// astraUri := "0ba933af-90c2-46e9-887a-a387ba75411b-westus2.apps.astra-dev.datastax.com:443"
-	// bearer_token := "AstraCS:YUskXkABjYztQJfTHNkOGHOI:09fa16889d7217b23b3854d3b2858a17b895ec272494a1539e47200b87567f26"
-
-	// Create connection with authentication
-	// For Stargate  OSS:
-	conn, err := grpc.Dial(stargateUri, grpc.WithInsecure(), grpc.WithBlock(),
+	conn, err := grpc.Dial(grpcEndpoint, grpc.WithInsecure(), grpc.WithBlock(),
 		grpc.WithPerRPCCredentials(
 			auth.NewTableBasedTokenProviderUnsafe(
-				fmt.Sprintf("http://%s/v1/auth", authEndpoint), username, password,
+				fmt.Sprintf("http://%s/v1/auth", authEndpoint), "cassandra", "cassandra",
 			),
 		),
 	)
 
-	// For Astra DB:
 	// config := &tls.Config{
 	// 	InsecureSkipVerify: false,
 	// }
 
-	// conn, err := grpc.Dial(astraUri, grpc.WithTransportCredentials(credentials.NewTLS(config)), grpc.WithBlock(),
-	// 	grpc.WithPerRPCCredentials(
-	// 		// auth.NewStaticTokenProvider("AstraCS:uuwizlOZhGxrUxaOqHPLAGCK:b4296e99a9f801d78043272b0efd79dca115b1fd95765780df36ed3ada87ff9b"),
-	// 		auth.NewStaticTokenProvider(bearer_token),
-	// 	),
-	// )
-
-	// For Stargate OSS and Astra DB: Create the gRPC client
 	stargateClient, err = client.NewStargateClientWithConn(conn)
 
 	if err != nil {
 		fmt.Printf("error creating client %v", err)
 		os.Exit(1)
 	}
-
 	fmt.Printf("made client\n")
 
-	// For Stargate OSS: Create a new keyspace
-	// For Astra DB: delete these statements and create a keyspace in the Astra DB dashboard
+	// Create a new keyspace
 	createKeyspaceStatement := &pb.Query{
 		Cql: "CREATE KEYSPACE IF NOT EXISTS test WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor' : 1};",
 	}
@@ -68,10 +48,9 @@ func main() {
 		fmt.Printf("error creating keyspace %v", err)
 		return
 	}
-
 	fmt.Printf("made keyspace\n")
 
-	// For Stargate OSS and Astra DB: Create a new table
+	// Create a new table
 	createTableQuery := &pb.Query{
 		Cql: "CREATE TABLE IF NOT EXISTS test.users (firstname text PRIMARY KEY, lastname text);",
 	}
@@ -81,11 +60,8 @@ func main() {
 		fmt.Printf("error creating table %v", err)
 		return
 	}
-
 	fmt.Printf("made table \n")
 
-	// For Stargate OSS and Astra DB: INSERT two rows/records
-	//  Two queries will be run in a batch statement
 	batch := &pb.Batch{
 		Type: pb.Batch_LOGGED,
 		Queries: []*pb.BatchQuery{
@@ -103,10 +79,8 @@ func main() {
 		fmt.Printf("error creating batch %v", err)
 		return
 	}
-
 	fmt.Printf("insert data\n")
 
-	// For Stargate OSS and Astra DB: SELECT the data to read from the table
 	selectQuery := &pb.Query{
 		Cql: "SELECT firstname, lastname FROM test.users;",
 	}
@@ -116,12 +90,10 @@ func main() {
 		fmt.Printf("error executing query %v", err)
 		return
 	}
-
 	fmt.Printf("select executed\n")
-	// Get the results from the execute query statement
+
 	result := response.GetResultSet()
 
-	// This for loop gets 2 results
 	var i, j int
 	for i = 0; i < 2; i++ {
 		valueToPrint := ""
