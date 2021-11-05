@@ -118,6 +118,7 @@ func main() {
 	}
 
 	fmt.Printf("select executed\n")
+
 	// Get the results from the execute query statement
 	result := response.GetResultSet()
 
@@ -136,4 +137,5 @@ func main() {
 		}
 		fmt.Printf("%v \n", valueToPrint)
 	}
+	fmt.Printf("everything worked!")
 }
