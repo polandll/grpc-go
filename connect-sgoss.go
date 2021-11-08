@@ -17,11 +17,13 @@ func main() {
 
 	grpcEndpoint := "localhost:8090"
 	authEndpoint := "localhost:8081"
+	username := "cassandra"
+	passwd := "cassandra"
 
 	conn, err := grpc.Dial(grpcEndpoint, grpc.WithInsecure(), grpc.WithBlock(),
 		grpc.WithPerRPCCredentials(
 			auth.NewTableBasedTokenProviderUnsafe(
-				fmt.Sprintf("http://%s/v1/auth", authEndpoint), "cassandra", "cassandra",
+				fmt.Sprintf("http://%s/v1/auth", authEndpoint), username, passwd,
 			),
 		),
 	)
@@ -29,6 +31,14 @@ func main() {
 	// config := &tls.Config{
 	// 	InsecureSkipVerify: false,
 	// }
+	//conn, err := grpc.Dial(grpcEndpoint, grpc.WithTransportCredentials(credentials.NewTLS(config)),
+	//   grpc.WithBlock(),
+	//   grpc.WithPerRPCCredentials(
+	//     auth.NewTableBasedTokenProvider(
+	//       fmt.Sprintf("http://%s/v1/auth", authEndpoint), username, passwd,
+	//     ),
+	//   ),
+	// )
 
 	stargateClient, err = client.NewStargateClientWithConn(conn)
 
