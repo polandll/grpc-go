@@ -65,10 +65,10 @@ func main() {
 		Type: pb.Batch_LOGGED,
 		Queries: []*pb.BatchQuery{
 			{
-				Cql: "INSERT INTO test.users (firstname, lastname) VALUES ('Lorina', 'Poland');",
+				Cql: "INSERT INTO test.users (firstname, lastname) VALUES ('Jane', 'Doe');",
 			},
 			{
-				Cql: "INSERT INTO test.users (firstname, lastname) VALUES ('Ronnie', 'Miller');",
+				Cql: "INSERT INTO test.users (firstname, lastname) VALUES ('Serge', 'Provencio');",
 			},
 		},
 	}
