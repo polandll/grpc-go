@@ -18,8 +18,8 @@ var stargateClient *client.StargateClient
 func main() {
 
 	// Astra DB configuration
-	astraUri := "0ba933af-90c2-46e9-887a-a387ba75411b-westus2.apps.astra-dev.datastax.com:443"
-	bearer_token := "AstraCS:YUskXkABjYztQJfTHNkOGHOI:09fa16889d7217b23b3854d3b2858a17b895ec272494a1539e47200b87567f26"
+	//const astra_uri = "$ASTRA_CLUSTER_ID-$ASTRA_REGION.apps.astra-dev.datastax.com:443";
+	//const bearer_token = "AstraCS:xxxxx";
 
 	// Create connection with authentication
 	// For Astra DB:
