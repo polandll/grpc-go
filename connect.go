@@ -22,7 +22,7 @@ func main() {
 	password := "cassandra"
 
 	// Astra DB configuration
-	// astraUri := "$ASTRA_CLUSTER_ID-$ASTRA_REGION.apps.astra-dev.datastax.com:443"
+	// astraUri := "$ASTRA_CLUSTER_ID-$ASTRA_REGION.apps.astra.datastax.com:443"
 	// bearer_token := "AstraCS:xxxxx"
 
 	// Create connection with authentication
